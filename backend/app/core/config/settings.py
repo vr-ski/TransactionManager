@@ -5,8 +5,8 @@ class Settings(BaseSettings):
     # -------------------------
     # Database
     # -------------------------
-    DATABASE_URL: str  # type: ignore[call-arg]
-    DATABASE_TEST_URL: str  # type: ignore[call-arg]
+    DATABASE_URL: str
+    DATABASE_TEST_URL: str
 
     # -------------------------
     # JWT / Security
@@ -20,4 +20,4 @@ class Settings(BaseSettings):
         env_file_encoding = "utf-8"
 
 
-settings = Settings()
+settings = Settings()  # type: ignore[call-arg]
