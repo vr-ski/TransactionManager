@@ -1,0 +1,68 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: postgres
+    networks:
+      - appnet
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: payments
+      POSTGRES_PASSWORD: payments
+      POSTGRES_DB: payments
+      POSTGRES_TEST_DB: payments_test
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U banking_user -d banking_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    networks:
+      - appnet
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg2://payments:payments@postgres:5432/payments
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    healthcheck:
+      test: ["CMD-SHELL", "python3 - << 'EOF'\nimport urllib.request; urllib.request.urlopen('http://localhost:8000/health')\nEOF"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+    container_name: frontend
+    networks:
+      - appnet
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+
+volumes:
+  postgres_data:
+
+networks:
+  appnet:
+    driver: bridge
