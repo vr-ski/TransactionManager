@@ -51,6 +51,15 @@ jobs:
       - name: Run mypy
         run: cd backend && mypy app
 
+      - name: Run database init scripts
+        env:
+          PGPASSWORD: payments
+        run: |
+          for sql in db/init/*.sql; do
+            echo "Running ${sql}..."
+            psql -h localhost -U payments -d payments_test -f "$sql"
+          done
+
       - name: Run tests
         env:
           DATABASE_TEST_URL: postgresql://payments:payments@localhost:5432/payments_test
