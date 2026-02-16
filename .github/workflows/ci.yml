@@ -54,6 +54,7 @@ jobs:
       - name: Run tests
         env:
           DATABASE_TEST_URL: postgresql://payments:payments@localhost:5432/payments_test
+          PYTHONPATH: ${{ github.workspace }}/backend
         run: cd backend && pytest
 
   frontend:
