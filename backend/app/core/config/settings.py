@@ -5,8 +5,8 @@ class Settings(BaseSettings):
     # -------------------------
     # Database
     # -------------------------
-    DATABASE_URL: str
-    DATABASE_TEST_URL: str
+    DATABASE_URL: str  # type: ignore[call-arg]
+    DATABASE_TEST_URL: str  # type: ignore[call-arg]
 
     # -------------------------
     # JWT / Security

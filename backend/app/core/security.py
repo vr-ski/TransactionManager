@@ -30,7 +30,7 @@ def verify_password(plain_password: str, password_hash: str) -> bool:
     Compare a plain-text password with a hashed password.
     Returns True if they match, False otherwise.
     """
-    return pwd_context.verify(plain_password, password_hash)
+    return pwd_context.verify(plain_password, password_hash)  # type: ignore[no-any-return]
 
 
 def hash_password(password: str) -> str:
@@ -38,4 +38,4 @@ def hash_password(password: str) -> str:
     Hash a plain-text password using bcrypt.
     Returns the hashed password.
     """
-    return pwd_context.hash(password)
+    return pwd_context.hash(password)  # type: ignore[no-any-return]

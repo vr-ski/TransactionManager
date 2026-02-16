@@ -50,4 +50,4 @@ class AuthService:
             algorithm=settings.JWT_ALGORITHM,
         )
 
-        return token
+        return token  # type: ignore[no-any-return]

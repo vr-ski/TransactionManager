@@ -85,4 +85,3 @@ jobs:
 
       - name: Unit tests
         run: cd frontend && npm run test:unit
-
